@@ -860,7 +860,7 @@
                                     <textarea name="contact_message" class="textarea-message form-control" placeholder="Message" rows="4" required></textarea>
                                 </div>
                                 <!-- Button -->
-                                <button class="btn btn-danger" type="button">Send Now<i class="fa fa-paper-plane-o"></i>
+                                <button class="btn btn-danger" onclick="sendEmail(this)" type="button">Send Now<i class="fa fa-paper-plane-o"></i>
 							</button>
                             </form>
                             <!-- Form Ends -->
@@ -1325,7 +1325,41 @@
             });
         </script>
 
+<script>
+    function sendEmail(id) {
+      var name = document.getElementsByName('contact_name')[0].value;
+      var email = document.getElementsByName('contact_email')[0].value;
+      var message = document.getElementsByName('contact_message')[0].value;
+    //   alert(name +'\n' + email + '\n' + message)
+      $.ajax({
+      url: 'http://3.20.106.104:8000/notification_management/send_mail',
+      type: 'POST',
+    //   headers: { "X-CSRFToken":getCookie("csrftoken") },
+      data: {'name': name,'email':email, 'message':message},
+      success: function(data){
+          alert(data['message'])
+          document.getElementsByName('contact_name')[0].value='';
+          document.getElementsByName('contact_email')[0].value='';
+          document.getElementsByName('contact_message')[0].value='';
+      },
+      statusCode: {
+          404: function(response) {
+              console.log('ajax.statusCode: 404');
+              alert('404')
+          },
+          500: function(response) {
+              alert('500')
+          },
+          400: function(response) {
+              alert('400')
+          },
+      }
+    });
 
+
+    }
+    </script>
+    
 
 
 </body>
